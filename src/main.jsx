@@ -8,6 +8,7 @@ const DEX_URL = `https://dexscreener.com/robinhood/${PAIR}`;
 const API_URL = `https://api.dexscreener.com/latest/dex/pairs/robinhood/${PAIR}`;
 const CHART_URL = `${DEX_URL}?embed=1&theme=dark&trades=0&info=0`;
 const UNISWAP_URL = `https://app.uniswap.org/swap?chain=robinhood&outputCurrency=${TOKEN}`;
+const TELEGRAM_URL = 'https://telegram.me/+4zR4jMlA6ZA0ODBh';
 
 function WsbGuy({ compact = false }) {
   return <div className={`wsb-guy ${compact ? 'compact' : ''}`} aria-label="WallStreetBets character">
@@ -116,7 +117,7 @@ function App() {
                 <WsbGuy/>
                 <div className="mini-chart">
                   <div><b>$WSB LIVE</b><span>{price} · <em className={stats.change >= 0 ? 'positive' : 'negative'}>{stats.change == null ? '—' : `${stats.change >= 0 ? '+' : ''}${stats.change.toFixed(2)}%`}</em></span></div>
-                  <iframe title="$WSB compact live chart" src={CHART_URL} loading="lazy"/>
+                  <iframe title="$WSB compact live chart" src={CHART_URL} loading="lazy" allowFullScreen/>
                 </div>
               </div>
             </div>
@@ -137,7 +138,7 @@ function App() {
 
           <Post id="token" flair="Token" title="$WSB live chart, token details and ways to buy" score="6.9k">
             <div className="token-stats"><div><span>PRICE</span><b>{price}</b></div><div><span>MARKET CAP</span><b>{formatMoney(stats.marketCap)}</b></div><div><span>24H</span><b className={stats.change >= 0 ? 'positive' : 'negative'}>{stats.change == null ? '—' : `${stats.change >= 0 ? '+' : ''}${stats.change.toFixed(2)}%`}</b></div><div><span>CHAIN</span><b>4663</b></div></div>
-            <div className="chart-shell"><iframe title="$WSB live Dexscreener chart" src={CHART_URL} loading="lazy" allowFullScreen/></div>
+            <div className="chart-shell"><iframe title="$WSB live price chart" src={CHART_URL} loading="lazy" allowFullScreen/></div>
             <div className="buy-grid"><a href={UNISWAP_URL} target="_blank" rel="noreferrer"><b>🦄 UNISWAP</b><span>Swap ETH for $WSB ↗</span></a><a href={DEX_URL} target="_blank" rel="noreferrer"><b>📈 DEXSCREENER</b><span>Chart and transactions ↗</span></a><button disabled><b>🤖 BASEBOT</b><span>Link coming soon</span></button></div>
             <p className="warning"><b>⚠ VERIFY BEFORE YOU BUY</b> The only contract promoted by this site is <button onClick={copyContract}>{TOKEN}</button></p>
           </Post>
@@ -169,14 +170,14 @@ function App() {
           </Post>
 
           <Post id="socials" flair="Socials" title="Official links — if it isn’t here, verify twice" score="1.9k">
-            <div className="social-grid"><a href="https://x.com/wsbrobinhood" target="_blank" rel="noreferrer"><span>𝕏</span><div><b>FOLLOW ON X</b><small>@wsbrobinhood</small></div><em>↗</em></a><a href="https://t.me/robinhoodwsb" target="_blank" rel="noreferrer"><span>➤</span><div><b>JOIN TELEGRAM</b><small>t.me/robinhoodwsb</small></div><em>↗</em></a><a href={DEX_URL} target="_blank" rel="noreferrer"><span>▥</span><div><b>DEXSCREENER</b><small>Live chart and trades</small></div><em>↗</em></a><button onClick={copyContract}><span>◇</span><div><b>CONTRACT</b><small>{copied ? 'Copied to clipboard' : 'Tap to copy'}</small></div><em>{copied ? '✓' : '⧉'}</em></button></div>
+            <div className="social-grid"><a href="https://x.com/wsbrobinhood" target="_blank" rel="noreferrer"><span>𝕏</span><div><b>FOLLOW ON X</b><small>@wsbrobinhood</small></div><em>↗</em></a><a href={TELEGRAM_URL}><span>➤</span><div><b>JOIN TELEGRAM</b><small>@robinhoodwsb</small></div><em>↗</em></a><a href={DEX_URL} target="_blank" rel="noreferrer"><span>▥</span><div><b>DEXSCREENER</b><small>Live chart and trades</small></div><em>↗</em></a><button onClick={copyContract}><span>◇</span><div><b>CONTRACT</b><small>{copied ? 'Copied to clipboard' : 'Tap to copy'}</small></div><em>{copied ? '✓' : '⧉'}</em></button></div>
           </Post>
         </div>
 
         <aside>
           <section className="about-card"><div className="card-head">About Community</div><div className="card-body"><h3>r/wallstreetbets_on_RH</h3><p>Tokenizing the history, chaos and impact of retail trading on Robinhood Chain.</p><div className="community-numbers"><div><b>∞</b><span>Diamond hands</span></div><div><b>4663</b><span>Chain ID</span></div></div><hr/><p className="created">🎂 Created on-chain · 2026</p><a href="https://x.com/wsbrobinhood" target="_blank" rel="noreferrer">JOIN THE COMMUNITY</a></div></section>
-          <section className="rules-card"><div className="card-head">r/WSB Rules</div><ol><li><b>Positions or ban</b><span>Verify the contract.</span></li><li><b>No financial advice</b><span>Sir, this is a casino.</span></li><li><b>Memes must slap</b><span>Low-effort FUD gets downvoted.</span></li><li><b>No fake endorsements</b><span>Independent means independent.</span></li><li><b>Apes together strong</b><span>Don’t be exit liquidity on purpose.</span></li></ol></section>
-          <section className="links-card"><div className="card-head">Official Links</div><a href="https://x.com/wsbrobinhood" target="_blank" rel="noreferrer">𝕏 X / Twitter <span>↗</span></a><a href="https://t.me/robinhoodwsb" target="_blank" rel="noreferrer">➤ Telegram <span>↗</span></a><a href={DEX_URL} target="_blank" rel="noreferrer">▥ Dexscreener <span>↗</span></a><a href={UNISWAP_URL} target="_blank" rel="noreferrer">🦄 Uniswap <span>↗</span></a></section>
+          <section className="rules-card"><div className="card-head">r/WSB Rules</div><ol><li><b>Positions or ban:</b>{' '}Verify the contract.</li><li><b>No financial advice:</b>{' '}Sir, this is a casino.</li><li><b>Memes must slap:</b>{' '}Low-effort FUD gets downvoted.</li><li><b>No fake endorsements:</b>{' '}Independent means independent.</li><li><b>Apes together strong:</b>{' '}Don’t be exit liquidity on purpose.</li></ol></section>
+          <section className="links-card"><div className="card-head">Official Links</div><a href="https://x.com/wsbrobinhood" target="_blank" rel="noreferrer">𝕏 X / Twitter <span>↗</span></a><a href={TELEGRAM_URL}>➤ Telegram <span>↗</span></a><a href={DEX_URL} target="_blank" rel="noreferrer">▥ Dexscreener <span>↗</span></a><a href={UNISWAP_URL} target="_blank" rel="noreferrer">🦄 Uniswap <span>↗</span></a></section>
           <p className="aside-disclaimer">$WSB is an independent meme token with no intrinsic value or expectation of financial return. Not affiliated with Reddit, WallStreetBets, Robinhood Markets or GameStop. Always do your own research.</p>
         </aside>
       </div>
