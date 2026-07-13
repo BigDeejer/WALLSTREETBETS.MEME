@@ -1,0 +1,195 @@
+import React, { useEffect, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import './styles.css';
+
+const PAIR = '0x87363fa61d24f96ac35e3b1f2de40aa2506bbd07';
+const TOKEN = '0x6c2bA1C07cb717E1b188fCc7C823D5681e4c7E78';
+const DEX_URL = `https://dexscreener.com/robinhood/${PAIR}`;
+const API_URL = `https://api.dexscreener.com/latest/dex/pairs/robinhood/${PAIR}`;
+const CHART_URL = `${DEX_URL}?embed=1&theme=dark&trades=0&info=0`;
+const UNISWAP_URL = `https://app.uniswap.org/swap?chain=robinhood&outputCurrency=${TOKEN}`;
+
+function WsbGuy({ compact = false }) {
+  return <div className={`wsb-guy ${compact ? 'compact' : ''}`} aria-label="WallStreetBets character">
+    <svg viewBox="0 0 430 430" role="img">
+      <defs>
+        <linearGradient id="jacket" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#66c8f3"/><stop offset="1" stopColor="#2174aa"/></linearGradient>
+        <linearGradient id="blond" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#fff3a9"/><stop offset="1" stopColor="#f0b936"/></linearGradient>
+      </defs>
+      <circle cx="215" cy="215" r="202" fill="#ff4500" stroke="#0f1a22" strokeWidth="12"/>
+      <path d="M52 410c17-92 70-137 162-137 95 0 151 46 165 137" fill="url(#jacket)" stroke="#0f1a22" strokeWidth="9"/>
+      <path d="M156 282l59 91 61-91-21-21h-78z" fill="#fff" stroke="#0f1a22" strokeWidth="7"/>
+      <path d="M215 371l-24-43 24-22 25 22z" fill="#ff4500" stroke="#0f1a22" strokeWidth="5"/>
+      <path d="M113 154c0-89 41-132 103-132 66 0 108 44 108 132v47c0 72-43 112-108 112-62 0-103-45-103-112z" fill="#f5c589" stroke="#0f1a22" strokeWidth="9"/>
+      <path d="M113 151C74 86 134 18 198 28c31-34 116-12 124 62-29-31-59-42-89-37 42 13 62 36 74 63-49-32-98-37-142-20-24 10-39 31-52 55z" fill="url(#blond)" stroke="#0f1a22" strokeWidth="9" strokeLinejoin="round"/>
+      <path d="M149 133c44-18 96-19 142-2l-12 78c-49 19-90 19-134-1z" fill="#ff793b" stroke="#0f1a22" strokeWidth="8"/>
+      <path d="M155 143h56l-7 44h-47zm70 0h56l-8 44h-56z" fill="#14242c" stroke="#0f1a22" strokeWidth="6"/>
+      <path d="M170 151l30 28m40-28l29 27" stroke="#fff" strokeWidth="6" opacity=".75"/>
+      <path d="M207 163h17M190 238c16 13 39 13 57 0" fill="none" stroke="#0f1a22" strokeWidth="7" strokeLinecap="round"/>
+    </svg>
+  </div>;
+}
+
+const formatMoney = value => {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return '—';
+  if (n >= 1e9) return `$${(n / 1e9).toFixed(2)}B`;
+  if (n >= 1e6) return `$${(n / 1e6).toFixed(2)}M`;
+  if (n >= 1e3) return `$${(n / 1e3).toFixed(1)}K`;
+  return `$${n.toFixed(2)}`;
+};
+
+function VoteRail({ score = '4.6k' }) {
+  return <div className="vote-rail" aria-label={`${score} upvotes`}><button aria-label="Upvote">▲</button><b>{score}</b><button aria-label="Downvote">▼</button></div>;
+}
+
+function Post({ id, flair, title, children, score, pinned = false, className = '' }) {
+  return <article id={id} className={`post ${className}`}>
+    <VoteRail score={score}/>
+    <div className="post-body">
+      <div className="post-meta">{pinned && <span className="pinned">📌 PINNED BY MODS</span>} posted by <b>u/wsb_on_robinhood</b> · now</div>
+      <div className="post-title"><span className={`flair ${flair?.toLowerCase().replaceAll(' ', '-')}`}>{flair}</span><h2>{title}</h2></div>
+      {children}
+      <div className="post-actions"><span>💬 Comments</span><span>↗ Share</span><span>🔖 Save</span><span>•••</span></div>
+    </div>
+  </article>;
+}
+
+function App() {
+  const [stats, setStats] = useState({ price: null, marketCap: null, change: null, liquidity: null });
+  const [feedStatus, setFeedStatus] = useState('connecting');
+  const [copied, setCopied] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [memePrompt, setMemePrompt] = useState('');
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error();
+        const data = await response.json();
+        const pair = data.pair || data.pairs?.[0];
+        if (!pair) throw new Error();
+        setStats({
+          price: Number(pair.priceUsd),
+          marketCap: Number(pair.marketCap || pair.fdv),
+          change: Number(pair.priceChange?.h24),
+          liquidity: Number(pair.liquidity?.usd)
+        });
+        setFeedStatus('live');
+      } catch { setFeedStatus('offline'); }
+    };
+    load();
+    const timer = setInterval(load, 30000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const copyContract = async () => {
+    await navigator.clipboard.writeText(TOKEN);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+  const price = stats.price ? `$${stats.price < .001 ? stats.price.toFixed(7) : stats.price.toFixed(4)}` : '—';
+  const nav = [['lore','Lore / History'],['token','Token'],['roadmap','Roadmap'],['faq','FAQ'],['meme-generator','Meme Generator'],['socials','Socials']];
+
+  return <>
+    <header className="topbar">
+      <a href="#top" className="reddit-mark" aria-label="Home"><span>r/</span></a>
+      <a href="#top" className="top-name">wallstreetbets_on_RH</a>
+      <button className="mobile-menu" onClick={() => setMobileOpen(!mobileOpen)}>{mobileOpen ? '✕' : '☰'}</button>
+      <nav className={mobileOpen ? 'open' : ''}>{nav.map(([id,label]) => <a key={id} href={`#${id}`} onClick={() => setMobileOpen(false)}>{label}</a>)}</nav>
+      <a className="top-buy" href={UNISWAP_URL} target="_blank" rel="noreferrer">BUY $WSB</a>
+    </header>
+
+    <main id="top">
+      <section className="community-banner">
+        <div className="banner-pattern"><span>WSB</span><span>DIAMOND HANDS</span><span>WSB</span><span>ROBINHOOD CHAIN</span></div>
+        <div className="community-head wrap">
+          <WsbGuy compact/>
+          <div><h1>r/wallstreetbets_on_RH</h1><p>The front page of the on-chain casino.</p></div>
+          <a href={UNISWAP_URL} target="_blank" rel="noreferrer">JOIN THE TRADE</a>
+        </div>
+        <div className="community-tabs wrap"><a className="active" href="#top">Posts</a><a href="#lore">Lore</a><a href="#token">Token</a><a href="#roadmap">Roadmap</a><a href="#faq">FAQ</a><button>•••</button></div>
+      </section>
+
+      <section className="ticker-bar">
+        <div><span><i className={feedStatus}/>{feedStatus === 'live' ? 'LIVE' : feedStatus.toUpperCase()}</span><b>$WSB {price}</b><b>MCAP {formatMoney(stats.marketCap)}</b><b className={stats.change >= 0 ? 'positive' : 'negative'}>24H {stats.change == null ? '—' : `${stats.change >= 0 ? '+' : ''}${stats.change.toFixed(2)}%`}</b><b>LIQ {formatMoney(stats.liquidity)}</b><small>DEXSCREENER · REFRESHES EVERY 30S</small></div>
+      </section>
+
+      <div className="page-grid wrap">
+        <div className="feed">
+          <div className="sort-row"><button className="active">🔥 Hot</button><button>✨ New</button><button>⬆ Top</button><button>•••</button></div>
+
+          <Post flair="Official" title="THE CASINO IS ON-CHAIN." score="12.4k" pinned className="hero-post">
+            <div className="hero-layout">
+              <div className="hero-copy"><p className="overline">WALLSTREETBETS · ROBINHOOD CHAIN · CHAIN ID 4663</p><h3>RETAIL MADE HISTORY.<br/><em>NOW WE TOKENIZE IT.</em></h3><p>Wall Street’s loudest internet counterculture has landed on the chain built by the buy-button company. $WSB is an independent meme token celebrating the moments, characters and chaos that changed retail trading forever.</p><div className="hero-buttons"><a href={UNISWAP_URL} target="_blank" rel="noreferrer">BUY ON UNISWAP ↗</a><a className="secondary" href={DEX_URL} target="_blank" rel="noreferrer">VIEW CHART</a></div></div>
+              <WsbGuy/>
+            </div>
+            <button className="contract-line" onClick={copyContract}><span>CONTRACT</span><code>{TOKEN}</code><b>{copied ? 'COPIED ✓' : 'COPY'}</b></button>
+          </Post>
+
+          <Post id="lore" flair="DD" title="The story of WallStreetBets: from obscure subreddit to market-moving force" score="9.8k">
+            <p className="post-lead">WallStreetBets turned the sterile language of finance into memes, screenshots, conviction and collective spectacle. What began in 2012 as a home for aggressive trades grew into one of the most consequential retail-investor communities of the modern market era.</p>
+            <div className="timeline">
+              <div><time>2012</time><section><h3>THE SUBREDDIT OPENS</h3><p>A new forum gives high-risk retail traders their own language: YOLOs, tendies, loss porn and positions—or ban. It makes markets feel participatory, funny and brutally transparent.</p></section></div>
+              <div><time>2019</time><section><h3>GUH ENTERS THE LEXICON</h3><p>u/ControlTheNarrative exploits a Robinhood leverage loophole, records the instant an options trade collapses and gives the internet one immortal syllable: “GUH.” The loss becomes community folklore.</p></section></div>
+              <div><time>2019–20</time><section><h3>ROARING KITTY POSTS THE THESIS</h3><p>Keith Gill—u/DeepFuckingValue on Reddit and Roaring Kitty elsewhere—shares a deeply researched, contrarian GameStop position. The screenshots look absurd until they don’t.</p></section></div>
+              <div className="highlight"><time>JAN 2021</time><section><h3>RETAIL MOVES THE MARKET</h3><p>GameStop erupts. Social interest, trading volume and price accelerate together. Broker restrictions, congressional hearings and global headlines follow. A subreddit becomes part of the market’s permanent vocabulary.</p></section></div>
+              <div><time>NOW</time><section><h3>THE LORE GOES ON-CHAIN</h3><p>$WSB brings that history to Robinhood Chain as an independent community tribute. Our position is simple: OG ticker, OG culture, new rails. We aim to be the defining WSB meme token on the chain.</p></section></div>
+            </div>
+            <div className="source-note"><b>RECEIPTS:</b> <a href="https://www.sec.gov/newsroom/press-releases/2021-212" target="_blank" rel="noreferrer">SEC report ↗</a><a href="https://www.congress.gov/event/117th-congress/senate-event/328828/text" target="_blank" rel="noreferrer">Congressional record ↗</a><a href="https://www.reddit.com/r/wallstreetbets/comments/drt5tr" target="_blank" rel="noreferrer">GUH archive ↗</a></div>
+          </Post>
+
+          <Post id="token" flair="Token" title="$WSB live chart, token details and ways to buy" score="6.9k">
+            <div className="token-stats"><div><span>PRICE</span><b>{price}</b></div><div><span>MARKET CAP</span><b>{formatMoney(stats.marketCap)}</b></div><div><span>24H</span><b className={stats.change >= 0 ? 'positive' : 'negative'}>{stats.change == null ? '—' : `${stats.change >= 0 ? '+' : ''}${stats.change.toFixed(2)}%`}</b></div><div><span>CHAIN</span><b>4663</b></div></div>
+            <div className="chart-shell"><iframe title="$WSB live Dexscreener chart" src={CHART_URL} loading="lazy" allowFullScreen/></div>
+            <div className="buy-grid"><a href={UNISWAP_URL} target="_blank" rel="noreferrer"><b>🦄 UNISWAP</b><span>Swap ETH for $WSB ↗</span></a><a href={DEX_URL} target="_blank" rel="noreferrer"><b>📈 DEXSCREENER</b><span>Chart and transactions ↗</span></a><button disabled><b>🤖 BASEBOT</b><span>Link coming soon</span></button></div>
+            <p className="warning"><b>⚠ VERIFY BEFORE YOU BUY</b> The only contract promoted by this site is <button onClick={copyContract}>{TOKEN}</button></p>
+          </Post>
+
+          <Post id="roadmap" flair="Roadmap" title="The marketing roadmap: turn fee revenue into attention" score="4.2k">
+            <p className="post-lead">The goal is a transparent growth loop: when the project receives fee revenue, a portion can be directed toward measurable community growth. Plans depend on available funds, community priorities and market conditions—none are guaranteed.</p>
+            <div className="roadmap-list">
+              <div className="complete"><span>01</span><section><label>LAUNCH · COMPLETE</label><h3>ESTABLISH THE BEACHHEAD</h3><p>Launch on Robinhood Chain, establish the primary liquidity pool, build the website and organize the first holders.</p></section></div>
+              <div className="current"><span>02</span><section><label>NOW · IN PROGRESS</label><h3>MAKE THE TICKER VISIBLE</h3><p>Use an accountable portion of project fee revenue for Dexscreener boosts and placements designed to put $WSB in front of active on-chain traders.</p></section></div>
+              <div><span>03</span><section><label>NEXT</label><h3>REACH RETAIL WHERE IT SCROLLS</h3><p>Commission creator-led TikTok, Instagram and X content. Prioritize native memes and transparent paid collaborations over generic ads.</p></section></div>
+              <div><span>04</span><section><label>EXPAND</label><h3>ROBINHOOD CHAIN COLLABS</h3><p>Work with other credible Robinhood Chain meme communities on spaces, meme raids, shared campaigns and ecosystem events.</p></section></div>
+              <div><span>05</span><section><label>THE BIG ASK</label><h3>ONBOARD THE OGs</h3><p>Reach out respectfully to notable Reddit and retail-trading figures. Earn recognition through execution; never imply endorsement before it exists.</p></section></div>
+            </div>
+          </Post>
+
+          <Post id="faq" flair="FAQ" title="Read this before asking in the daily thread" score="3.1k">
+            <div className="faq-list">
+              <details open><summary>Is $WSB affiliated with Reddit or r/wallstreetbets?<span>+</span></summary><p>No. $WSB is an independent meme token and community tribute. It is not affiliated with, sponsored by or endorsed by Reddit, r/wallstreetbets, Robinhood Markets, GameStop or any individual associated with those communities. We hope to build relationships in the future, but no relationship should be assumed.</p></details>
+              <details><summary>What is the point of the token?<span>+</span></summary><p>To preserve and remix a defining chapter of retail-trading culture on-chain: the memes, the characters, the wins, the losses and the moment online traders became impossible for traditional markets to ignore.</p></details>
+              <details><summary>Is this the official WallStreetBets token?<span>+</span></summary><p>No. “Official” would imply an endorsement that does not exist. The project’s ambition is to become the defining WSB-themed meme community on Robinhood Chain through transparent work and culture—not through misleading claims.</p></details>
+              <details><summary>Does $WSB promise profits or returns?<span>+</span></summary><p>No. It is a highly speculative meme token with no promise of financial return. Prices can move sharply and you can lose everything you spend. Nothing on this website is financial advice.</p></details>
+              <details><summary>How are project fees intended to be used?<span>+</span></summary><p>The current intention is to direct available project fee revenue toward visibility, content, collaborations and community growth. Before publishing specific percentages, wallets or guarantees, those details should be confirmed and made independently verifiable.</p></details>
+              <details><summary>What is the correct contract?<span>+</span></summary><p><code>{TOKEN}</code> on Robinhood Chain. Always verify it against multiple official channels before swapping.</p></details>
+            </div>
+          </Post>
+
+          <Post id="meme-generator" flair="Coming Soon" title="WSB Meme Machine v0.1 — currently behind Wendy’s" score="2.7k" className="meme-post">
+            <div className="terminal-head"><span>●</span><span>●</span><span>●</span><b>meme_machine.exe</b></div>
+            <div className="meme-machine"><div className="meme-preview"><WsbGuy/><div>COMING<br/>SOON</div></div><div className="meme-form"><label>DESCRIBE YOUR MEME</label><textarea value={memePrompt} onChange={e => setMemePrompt(e.target.value)} placeholder="A diamond-handed ape watching the chart at 3AM..."/><div className="style-pills"><button className="selected">WSB CLASSIC</button><button>LOSS PORN</button><button>GAIN POST</button></div><button className="disabled-action" disabled>GENERATE MEME · COMING SOON</button><p>Planned: instant WSB-inspired image generation, caption controls, download and one-click posting to X.</p></div></div>
+          </Post>
+
+          <Post id="socials" flair="Socials" title="Official links — if it isn’t here, verify twice" score="1.9k">
+            <div className="social-grid"><a href="https://x.com/wsbrobinhood" target="_blank" rel="noreferrer"><span>𝕏</span><div><b>FOLLOW ON X</b><small>@wsbrobinhood</small></div><em>↗</em></a><a href="https://t.me/robinhoodwsb" target="_blank" rel="noreferrer"><span>➤</span><div><b>JOIN TELEGRAM</b><small>t.me/robinhoodwsb</small></div><em>↗</em></a><a href={DEX_URL} target="_blank" rel="noreferrer"><span>▥</span><div><b>DEXSCREENER</b><small>Live chart and trades</small></div><em>↗</em></a><button onClick={copyContract}><span>◇</span><div><b>CONTRACT</b><small>{copied ? 'Copied to clipboard' : 'Tap to copy'}</small></div><em>{copied ? '✓' : '⧉'}</em></button></div>
+          </Post>
+        </div>
+
+        <aside>
+          <section className="about-card"><div className="card-head">About Community</div><div className="card-body"><h3>r/wallstreetbets_on_RH</h3><p>Tokenizing the history, chaos and impact of retail trading on Robinhood Chain.</p><div className="community-numbers"><div><b>∞</b><span>Diamond hands</span></div><div><b>4663</b><span>Chain ID</span></div></div><hr/><p className="created">🎂 Created on-chain · 2026</p><a href="https://x.com/wsbrobinhood" target="_blank" rel="noreferrer">JOIN THE COMMUNITY</a></div></section>
+          <section className="rules-card"><div className="card-head">r/WSB Rules</div><ol><li><b>Positions or ban</b><span>Verify the contract.</span></li><li><b>No financial advice</b><span>Sir, this is a casino.</span></li><li><b>Memes must slap</b><span>Low-effort FUD gets downvoted.</span></li><li><b>No fake endorsements</b><span>Independent means independent.</span></li><li><b>Apes together strong</b><span>Don’t be exit liquidity on purpose.</span></li></ol></section>
+          <section className="links-card"><div className="card-head">Official Links</div><a href="https://x.com/wsbrobinhood" target="_blank" rel="noreferrer">𝕏 X / Twitter <span>↗</span></a><a href="https://t.me/robinhoodwsb" target="_blank" rel="noreferrer">➤ Telegram <span>↗</span></a><a href={DEX_URL} target="_blank" rel="noreferrer">▥ Dexscreener <span>↗</span></a><a href={UNISWAP_URL} target="_blank" rel="noreferrer">🦄 Uniswap <span>↗</span></a></section>
+          <p className="aside-disclaimer">$WSB is an independent meme token with no intrinsic value or expectation of financial return. Not affiliated with Reddit, WallStreetBets, Robinhood Markets or GameStop. Always do your own research.</p>
+        </aside>
+      </div>
+    </main>
+
+    <footer><div className="wrap"><WsbGuy compact/><div><b>r/wallstreetbets_on_RH</b><p>The front page of the on-chain casino.</p></div><p>Not financial advice · Independent community project · © 2026 $WSB</p><a href="#top">BACK TO TOP ↑</a></div></footer>
+  </>;
+}
+
+createRoot(document.getElementById('root')).render(<App />);
