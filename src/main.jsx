@@ -130,7 +130,7 @@ function App() {
               <div><time>2019</time><section><h3>GUH ENTERS THE LEXICON</h3><p>u/ControlTheNarrative exploits a Robinhood leverage loophole, records the instant an options trade collapses and gives the internet one immortal syllable: “GUH.” The loss becomes community folklore.</p></section></div>
               <div><time>2019–20</time><section><h3>ROARING KITTY POSTS THE THESIS</h3><p>Keith Gill—u/DeepFuckingValue on Reddit and Roaring Kitty elsewhere—shares a deeply researched, contrarian GameStop position. The screenshots look absurd until they don’t.</p></section></div>
               <div className="highlight"><time>JAN 2021</time><section><h3>RETAIL MOVES THE MARKET</h3><p>GameStop erupts. Social interest, trading volume and price accelerate together. Broker restrictions, congressional hearings and global headlines follow. A subreddit becomes part of the market’s permanent vocabulary.</p></section></div>
-              <div><time>NOW</time><section><h3>THE LORE GOES ON-CHAIN</h3><p>$WSB brings that history to Robinhood Chain as an independent community tribute. Our position is simple: OG ticker, OG culture, new rails. We aim to be the defining WSB meme token on the chain.</p></section></div>
+              <div><time>NOW</time><section><h3>THE BIGGEST RETAIL MOMENT, ON-CHAIN</h3><p>Robinhood built its own blockchain. So we’re putting retail trading’s biggest cultural event on it. $WSB tokenizes the lore—OG ticker, OG chaos, new chain.</p></section></div>
             </div>
             <div className="source-note"><b>RECEIPTS:</b> <a href="https://www.sec.gov/newsroom/press-releases/2021-212" target="_blank" rel="noreferrer">SEC report ↗</a><a href="https://www.congress.gov/event/117th-congress/senate-event/328828/text" target="_blank" rel="noreferrer">Congressional record ↗</a><a href="https://www.reddit.com/r/wallstreetbets/comments/drt5tr" target="_blank" rel="noreferrer">GUH archive ↗</a></div>
           </Post>
@@ -142,14 +142,14 @@ function App() {
             <p className="warning"><b>⚠ VERIFY BEFORE YOU BUY</b> The only contract promoted by this site is <button onClick={copyContract}>{TOKEN}</button></p>
           </Post>
 
-          <Post id="roadmap" flair="Roadmap" title="The marketing roadmap: turn fee revenue into attention" score="4.2k">
-            <p className="post-lead">The goal is a transparent growth loop: when the project receives fee revenue, a portion can be directed toward measurable community growth. Plans depend on available funds, community priorities and market conditions—none are guaranteed.</p>
+          <Post id="roadmap" flair="Roadmap" title="Roadmap: make $WSB impossible to ignore" score="4.2k">
+            <p className="post-lead">Fees fuel the meme. Attention grows the army. Simple.</p>
             <div className="roadmap-list">
-              <div className="complete"><span>01</span><section><label>LAUNCH · COMPLETE</label><h3>ESTABLISH THE BEACHHEAD</h3><p>Launch on Robinhood Chain, establish the primary liquidity pool, build the website and organize the first holders.</p></section></div>
-              <div className="current"><span>02</span><section><label>NOW · IN PROGRESS</label><h3>MAKE THE TICKER VISIBLE</h3><p>Use an accountable portion of project fee revenue for Dexscreener boosts and placements designed to put $WSB in front of active on-chain traders.</p></section></div>
-              <div><span>03</span><section><label>NEXT</label><h3>REACH RETAIL WHERE IT SCROLLS</h3><p>Commission creator-led TikTok, Instagram and X content. Prioritize native memes and transparent paid collaborations over generic ads.</p></section></div>
-              <div><span>04</span><section><label>EXPAND</label><h3>ROBINHOOD CHAIN COLLABS</h3><p>Work with other credible Robinhood Chain meme communities on spaces, meme raids, shared campaigns and ecosystem events.</p></section></div>
-              <div><span>05</span><section><label>THE BIG ASK</label><h3>ONBOARD THE OGs</h3><p>Reach out respectfully to notable Reddit and retail-trading figures. Earn recognition through execution; never imply endorsement before it exists.</p></section></div>
+              <div className="complete"><span>01</span><section><label>DONE</label><h3>LAUNCH THE CASINO</h3><p>Token live. Liquidity live. Website live. Apes assembling.</p></section></div>
+              <div className="current"><span>02</span><section><label>NOW</label><h3>BOOST THE TICKER</h3><p>Use fee revenue for Dexscreener boosts and more eyeballs.</p></section></div>
+              <div><span>03</span><section><label>NEXT</label><h3>FEED THE ALGORITHM</h3><p>TikToks, Reels, X posts and memes built for retail.</p></section></div>
+              <div><span>04</span><section><label>EXPAND</label><h3>APE WITH THE CHAIN</h3><p>Collabs, Spaces and raids with Robinhood Chain memecoins.</p></section></div>
+              <div><span>05</span><section><label>MOON MISSION</label><h3>SUMMON THE OGs</h3><p>Get WSB legends and Reddit heavyweights watching the ticker.</p></section></div>
             </div>
           </Post>
 
@@ -158,7 +158,6 @@ function App() {
               <details open><summary>Is $WSB affiliated with Reddit or r/wallstreetbets?<span>+</span></summary><p>No. $WSB is an independent meme token and community tribute. It is not affiliated with, sponsored by or endorsed by Reddit, r/wallstreetbets, Robinhood Markets, GameStop or any individual associated with those communities. We hope to build relationships in the future, but no relationship should be assumed.</p></details>
               <details><summary>What is the point of the token?<span>+</span></summary><p>To preserve and remix a defining chapter of retail-trading culture on-chain: the memes, the characters, the wins, the losses and the moment online traders became impossible for traditional markets to ignore.</p></details>
               <details><summary>Is this the official WallStreetBets token?<span>+</span></summary><p>No. “Official” would imply an endorsement that does not exist. The project’s ambition is to become the defining WSB-themed meme community on Robinhood Chain through transparent work and culture—not through misleading claims.</p></details>
-              <details><summary>Does $WSB promise profits or returns?<span>+</span></summary><p>No. It is a highly speculative meme token with no promise of financial return. Prices can move sharply and you can lose everything you spend. Nothing on this website is financial advice.</p></details>
               <details><summary>How are project fees intended to be used?<span>+</span></summary><p>The current intention is to direct available project fee revenue toward visibility, content, collaborations and community growth. Before publishing specific percentages, wallets or guarantees, those details should be confirmed and made independently verifiable.</p></details>
               <details><summary>What is the correct contract?<span>+</span></summary><p><code>{TOKEN}</code> on Robinhood Chain. Always verify it against multiple official channels before swapping.</p></details>
             </div>
