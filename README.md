@@ -1,6 +1,6 @@
 # $WSB — Reddit-style website
 
-A responsive single-page website for the independent $WSB meme-token community on Robinhood Chain. The design uses familiar forum conventions—post cards, voting rails, flairs, pinned posts, rules and sidebar widgets—without copying Reddit's interface exactly.
+A responsive single-page website for the independent $WSB meme-token community on Robinhood Chain. The design combines familiar forum conventions—post cards, voting rails, flairs, pinned posts, rules and sidebar widgets—with a black trading-terminal theme accented by Reddit orange and Robinhood green.
 
 ## Run locally
 
@@ -22,6 +22,8 @@ The production files are written to `dist/`. The project is configured for Verce
 ## Live token data
 
 Price, market cap, liquidity and 24-hour change are loaded from the Dexscreener pair API and refreshed every 30 seconds. The Token post embeds the Dexscreener chart.
+
+The homepage also contains a compact live chart directly beneath the supplied WSB character image. The character is stored at `public/wsb-guy.jpg`; the recoloured Robinhood feather is stored at `public/robinhood-feather-green.png`.
 
 ## Confirmed links
 

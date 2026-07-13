@@ -11,22 +11,7 @@ const UNISWAP_URL = `https://app.uniswap.org/swap?chain=robinhood&outputCurrency
 
 function WsbGuy({ compact = false }) {
   return <div className={`wsb-guy ${compact ? 'compact' : ''}`} aria-label="WallStreetBets character">
-    <svg viewBox="0 0 430 430" role="img">
-      <defs>
-        <linearGradient id="jacket" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#66c8f3"/><stop offset="1" stopColor="#2174aa"/></linearGradient>
-        <linearGradient id="blond" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#fff3a9"/><stop offset="1" stopColor="#f0b936"/></linearGradient>
-      </defs>
-      <circle cx="215" cy="215" r="202" fill="#ff4500" stroke="#0f1a22" strokeWidth="12"/>
-      <path d="M52 410c17-92 70-137 162-137 95 0 151 46 165 137" fill="url(#jacket)" stroke="#0f1a22" strokeWidth="9"/>
-      <path d="M156 282l59 91 61-91-21-21h-78z" fill="#fff" stroke="#0f1a22" strokeWidth="7"/>
-      <path d="M215 371l-24-43 24-22 25 22z" fill="#ff4500" stroke="#0f1a22" strokeWidth="5"/>
-      <path d="M113 154c0-89 41-132 103-132 66 0 108 44 108 132v47c0 72-43 112-108 112-62 0-103-45-103-112z" fill="#f5c589" stroke="#0f1a22" strokeWidth="9"/>
-      <path d="M113 151C74 86 134 18 198 28c31-34 116-12 124 62-29-31-59-42-89-37 42 13 62 36 74 63-49-32-98-37-142-20-24 10-39 31-52 55z" fill="url(#blond)" stroke="#0f1a22" strokeWidth="9" strokeLinejoin="round"/>
-      <path d="M149 133c44-18 96-19 142-2l-12 78c-49 19-90 19-134-1z" fill="#ff793b" stroke="#0f1a22" strokeWidth="8"/>
-      <path d="M155 143h56l-7 44h-47zm70 0h56l-8 44h-56z" fill="#14242c" stroke="#0f1a22" strokeWidth="6"/>
-      <path d="M170 151l30 28m40-28l29 27" stroke="#fff" strokeWidth="6" opacity=".75"/>
-      <path d="M207 163h17M190 238c16 13 39 13 57 0" fill="none" stroke="#0f1a22" strokeWidth="7" strokeLinecap="round"/>
-    </svg>
+    <img src="/wsb-guy.jpg" alt="WallStreetBets character surrounded by dollar bills" />
   </div>;
 }
 
@@ -122,8 +107,18 @@ function App() {
 
           <Post flair="Official" title="THE CASINO IS ON-CHAIN." score="12.4k" pinned className="hero-post">
             <div className="hero-layout">
-              <div className="hero-copy"><p className="overline">WALLSTREETBETS · ROBINHOOD CHAIN · CHAIN ID 4663</p><h3>RETAIL MADE HISTORY.<br/><em>NOW WE TOKENIZE IT.</em></h3><p>Wall Street’s loudest internet counterculture has landed on the chain built by the buy-button company. $WSB is an independent meme token celebrating the moments, characters and chaos that changed retail trading forever.</p><div className="hero-buttons"><a href={UNISWAP_URL} target="_blank" rel="noreferrer">BUY ON UNISWAP ↗</a><a className="secondary" href={DEX_URL} target="_blank" rel="noreferrer">VIEW CHART</a></div></div>
-              <WsbGuy/>
+              <div className="hero-copy"><div className="chain-kicker"><img src="/robinhood-feather-green.png" alt="Robinhood feather"/><span>WALLSTREETBETS · ROBINHOOD CHAIN<br/>CHAIN ID 4663</span></div><h3>RETAIL MADE HISTORY.<br/><em>NOW WE TOKENIZE IT.</em></h3><p>Wall Street’s loudest internet counterculture has landed on the chain built by the buy-button company. $WSB is an independent meme token celebrating the moments, characters and chaos that changed retail trading forever.</p><div className="hero-buttons"><a href={UNISWAP_URL} target="_blank" rel="noreferrer">BUY ON UNISWAP ↗</a><a className="secondary" href={DEX_URL} target="_blank" rel="noreferrer">VIEW CHART</a></div></div>
+              <div className="hero-visual">
+                <div className="money-rain" aria-hidden="true">
+                  <span className="d1">💎</span><span className="b1">💵</span><span className="d2">◆</span>
+                  <span className="b2">💵</span><span className="d3">💎</span><span className="b3">$100</span>
+                </div>
+                <WsbGuy/>
+                <div className="mini-chart">
+                  <div><b>$WSB LIVE</b><span>{price} · <em className={stats.change >= 0 ? 'positive' : 'negative'}>{stats.change == null ? '—' : `${stats.change >= 0 ? '+' : ''}${stats.change.toFixed(2)}%`}</em></span></div>
+                  <iframe title="$WSB compact live chart" src={CHART_URL} loading="lazy"/>
+                </div>
+              </div>
             </div>
             <button className="contract-line" onClick={copyContract}><span>CONTRACT</span><code>{TOKEN}</code><b>{copied ? 'COPIED ✓' : 'COPY'}</b></button>
           </Post>
